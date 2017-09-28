@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.BlackHumour.easymeeting.dao.EmployeeDao">
+	<resultMap type="cn.BlackHumour.easymeeting.entity.Employee" id="employeeResultMap">
+		<id column="id" property="id" jdbcType="INTEGER"/>
+		<result column="account" property="account" jdbcType="VARCHAR"/>
+		<result column="password" property="password" jdbcType="VARCHAR"/>
+		<result column="name" property="name" jdbcType="VARCHAR"/>
+		<result column="phone" property="phone" jdbcType="VARCHAR"/>
+		<result column="email" property="email" jdbcType="VARCHAR"/>
+		<result column="gender" property="gender" jdbcType="BIT"/>
+		<result column="status" property="status" jdbcType="BIT"/>
+		<association property="dept" javaType="cn.BlackHumour.easymeeting.entity.Dept">
+			<id column="deptId" property="id" jdbcType="INTEGER"/>
+			<result column="name" property="name" jdbcType="VARCHAR"/>
+		</association>
+	</resultMap>
+	<insert id="insert" parameterType="Employee">
+		insert into `employee` 
+		(account, password, name, phone, email, dept_id, gender, status)
+		values (#{account}, #{password}, #{name}, #{phone}, #{email}, #{dept.id}, #{gender}, 4)
+	</insert>
+	<select id="selectPageList" parameterType="Page" resultMap="employeeResultMap">
+		select e.id, account, e.name, phone, email, e.dept_id, d.name, e.status
+		from `employee` e
+		left join `dept` d 
+		on e.dept_id = d.id
+		<where>
+			<if test="keyEntity.name != null">
+				and e.name like "%"#{keyEntity.name}"%"
+			</if>
+			<if test="keyEntity.account != null">
+				and account like "%"#{keyEntity.account}"%"
+			</if>
+			<if test="keyEntity.status != null and keyEntity.status != 0">
+				and status = ${keyEntity.status}
+			</if>
+		</where>
+		order by e.id asc
+ 		limit #{startIndex},#{pageSize}
+	</select>
+	<select id="selectRecordsCount" parameterType="Page" resultType="Integer">
+		select count(1) from `employee`
+		<where>
+			<if test="keyEntity.name != null">
+				and name like "%"#{keyEntity.name}"%"
+			</if>
+			<if test="keyEntity.account != null">
+				and account like "%"#{keyEntity.account}"%"
+			</if>
+			<if test="keyEntity.status != null and keyEntity.status != 0">
+				and status = #{keyEntity.status}
+			</if>
+		</where>
+	</select>
+	
+	<update id="update" parameterType="cn.BlackHumour.easymeeting.entity.Employee">
+		update `employee`
+		<set>
+			<if test="name!=null">
+				name = #{name}
+			</if>
+			<if test="phone!=null">
+				phone = #{phone}
+			</if>
+			<if test="email!=null">
+				email = #{email}
+			</if>
+			<if test="status!=null">
+				status = #{status}
+			</if>
+			<if test="password!=null">
+				password = #{password}
+			</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<select id="listByStatus" resultType="Employee">
+		select id, name, account, phone, email
+		from `employee`
+		where status = #{status}
+	</select>
+	
+	<select id="selectByMeetingId" parameterType="int" resultType="Employee">
+		select e.id, e.name, e.phone, e.email
+		from `employee` e where e.id in (select employee_id from meeting_employee where meeting_id = #{id})
+	</select>
+	
+	<select id="login" parameterType="Employee" resultType="Employee">
+		select id, name from `employee` where account = #{account} and password = #{password} and status = 1
+	</select>
+	
+	<select id="getEmployeesByDetpId" parameterType="int" resultType="Employee">
+		select id, name from `employee` where dept_id = #{deptId} and status = 1
+	</select>
+	
+	<select id="existsCheck" parameterType="int" resultType="Employee">
+		select account from `employee` where account = #{account}
+	</select>
+</mapper>

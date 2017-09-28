@@ -1,0 +1,73 @@
+body {
+	background: #fafafa;
+	font-family: "Arial","Microsoft YaHei","ºÚÌå","ËÎÌå",sans-serif;
+}
+a {
+ 	text-decoration: none;
+ 	color: #26A2EF;
+}
+button {
+	outline: none;
+	border: none;
+	border-radius: 10px;
+	padding: 8px 12px;
+	font-size: 15px;
+	line-height: 16px;
+	color: #fff;
+	cursor: hand;
+	background: #26AEFF;
+}
+body input[type="text"], body input[type="password"] {
+	// border: 1px solid #26A2EF;
+	border-radius: 6px;
+	height: 26px;
+	padding: 8px 14px;
+	outline: none;
+	border: none;
+	font-size: 16px;
+	background: #fafafa;
+}
+body input[type="text"]:focus, body input[type="password"]:focus {
+	// border: 1px solid #26A2EF;
+}
+
+.danger {
+	background: #5CB85C;
+}
+.success {
+	background: #D9534F;
+}
+.forbidden {
+	color: #8c8c8c;
+}
+
+textarea {
+	outline: none;
+	border: none;
+	border-radius: 10px;
+	padding: 10px;
+	font-size: 16px;
+	resize: none;
+}
+select {
+	line-height: 14px;
+	font-size: 14px;
+	padding: 4px;
+	outline: none;
+	border: none;
+	border-radius: 10px;
+}
+
+input[type="radio"] {
+	padding: 10px;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+box-shadow:0 0 0 60px #fafafa inset;
+-webkit-text-fill-color: #666666;
+}
+.clear {
+	clear: both;
+}

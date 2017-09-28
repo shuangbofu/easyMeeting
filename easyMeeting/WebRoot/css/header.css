@@ -1,0 +1,29 @@
+.head-wrapper {
+	box-sizing: border-box;
+	background: #26AEFF;
+	height:100%;
+	color: #fff!important;
+	padding: 12px;
+	padding-left: 20px;
+}
+.name {
+	font-size: 28px;
+	display: inline-block;
+	letter-spacing: 2;
+}
+.count {
+	margin-left: 60px;
+	display: inline-block;
+}
+a {
+	color: #fff;
+}
+a:hover {
+	text-decoration:underline;
+}
+.more {
+	float: right;
+}
+.menu {
+	display: block;
+}

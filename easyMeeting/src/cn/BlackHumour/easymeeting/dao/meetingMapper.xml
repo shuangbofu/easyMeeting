@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.BlackHumour.easymeeting.dao.MeetingDao">
+	<resultMap type="cn.BlackHumour.easymeeting.entity.Meeting" id="meetingResultMap">
+		<id column="id" property="id" jdbcType="INTEGER"/>
+		<result column="name" property="name" jdbcType="VARCHAR"/>
+		<result column="count" property="count" jdbcType="INTEGER"/>
+		<result column="start_time" property="startTime" jdbcType="TIMESTAMP"/>
+		<result column="end_time" property="endTime" jdbcType="TIMESTAMP"/>
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+		<result column="note" property="note" jdbcType="VARCHAR"/>
+		<result column="status" property="status" jdbcType="BIT"/>
+		<association property="room" javaType="cn.BlackHumour.easymeeting.entity.Room">
+			<id column="rId" property="id" jdbcType="INTEGER"/>
+			<result column="rName" property="name" jdbcType="VARCHAR"/>
+		</association>
+		<association property="creator" javaType="cn.BlackHumour.easymeeting.entity.Employee">
+			<id column="eId" property="id" jdbcType="INTEGER"/>
+		</association>
+	</resultMap>
+	
+	<insert id="insert" parameterType="Meeting" useGeneratedKeys="true" keyProperty="id">
+		insert into `meeting` (name, room_id, count, start_time, end_time, create_time, creator_id, note, status)
+		values(#{name}, #{room.id}, #{count}, #{startTime}, #{endTime}, #{createTime}, #{creator.id}, #{note}, 1)
+	</insert>
+	
+	<select id="selectByParam" parameterType="int" resultMap="meetingResultMap">
+		select m.id, m.name, m.count, start_time, end_time, create_time, creator_id, m.note, m.status, 
+		r.name as rName
+		from (select * from `meeting`
+		<where>
+			creator_id = #{creator.id}
+			<if test="status!=null">
+				and status = 0
+			</if>
+		</where>
+		) as m
+		left join `room` r
+		on r.id = m.room_id
+		order by create_time desc
+	</select>
+	 
+	 <select id="getRecentMeetings" parameterType="int" resultMap="meetingResultMap">
+	 	select m.id, m.name, m.count, start_time, end_time, create_time, creator_id, m.note, m.status,
+	 	r.name as rName
+	 	from (select * from `meeting` 
+	 	where id in (select meeting_id from meeting_employee where employee_id = #{id})
+	 	and TO_DAYS(start_time) - TO_DAYS(now()) &lt;  7
+		and TO_DAYS(start_time) - TO_DAYS(now()) &gt; 0
+		and status = 1
+	 	) as m
+	 	left join `room` r
+	 	on r.id = m.room_id
+	 	order by create_time desc
+	 </select>
+	 
+	 <select id="getCancelMeetings" parameterType="int" resultMap="meetingResultMap">
+	 	select m.id, m.name, m.count, start_time, end_time, create_time, creator_id, m.note, m.status,
+	 	r.name as rName
+	 	from (select * from `meeting`
+	 	where id in (select meeting_id from meeting_employee where employee_id = #{id})
+	 	and status = 0) as m
+	 	left join `room` r
+	 	on r.id = m.room_id
+	 	order by create_time desc
+	 </select>
+	<select id="getDetail" parameterType="int" resultMap="meetingResultMap">
+		select id, name, count, creator_id as eId, room_id as rId, start_time, end_time, note, status 
+		from `meeting` where id = #{id}
+	</select>
+	<update id="abolish" parameterType="int">
+		update `meeting` set status = 0 where id = #{id}
+	</update>
+	
+	<insert id="insertMtEm">
+		insert into `meeting_employee` (meeting_id, employee_id)
+		values (#{0}, #{1})
+	</insert>
+</mapper>

@@ -1,0 +1,17 @@
+.login-wrapper .form {
+	margin: 10% auto;
+	width: 360px;
+	height: 200px;
+	background: #fff;
+}
+.form .td {
+	color: #8c8c8c;
+}
+.login-wrapper .form .login{
+	float: right;
+}
+.form a {
+	padding: 8px 12px;
+	float: left;
+	font-size: 20px;
+}

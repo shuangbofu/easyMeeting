@@ -1,0 +1,34 @@
+.left-wrapper {
+	background: #fff;
+}
+.item {
+	background: #fff;
+	padding: 15px;
+	border-bottom: 1px solid #f2f2f2;
+	border-left: 4px solid #fff;
+	cursor: hand;
+	color: #8c8c8c;
+	font-size: 16px;
+}
+
+.item:hover {
+	border-left: 4px solid #26AEFF;
+}
+.activated {
+	border-left: 4px solid #26AEFF;
+	color: #26AEFF;
+	font-weight: 700;
+}
+.nav {
+	box-shadow: 0px 2px 4px 1px #f2f2f2;
+	border: none;
+}
+.title {
+	font-size: 18px;
+	font-weight: 700;
+	padding: 10px 0;
+	padding-top: 15px;
+	color: #8c8c8c;
+	text-align: left;
+	margin-left: 10px;
+}

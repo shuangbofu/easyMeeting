@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.BlackHumour.easymeeting.dao.RoomDao">
+	<select id="list" resultType="Room">
+		select id, number, name, max_count as maxCount, status
+		from `room`
+	</select>
+	
+	<select id="getEffectiveList" resultType="Room">
+		select id, number, name, max_count, status
+		from `room` where status = 1
+	</select>
+	<insert id="insert" parameterType="Room">
+		insert into `room` 
+		(number, name, max_count, status, note) 
+		values (#{number}, #{name}, #{maxCount}, #{status}, #{note})
+	</insert>
+	
+	<select id="getDetail" parameterType="int" resultType="Room">
+		select id, number, name, max_count as maxCount, status, note from `room` where id = #{id}
+	</select>
+	
+	<update id="update" parameterType="Room">
+		update `room`
+		<set>
+			<if test="status != null">
+				status = #{status}
+			</if>
+		</set>
+		where id = #{id}
+	</update>
+</mapper>
